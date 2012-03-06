@@ -1,20 +1,22 @@
 var ffi = require('ffi-tools');
 
+var lib = require('path').resolve(__dirname, 'libcef');
+
 exports.Enums = {};
 exports.Structs = {};
 exports.Methods = {};
 
 
 function Enum(name, def){
- return exports.Enums[name] = new ffi.Enum(name, def);
+ return exports.Enums[name.replace(/^cef_?/i,'')] = new ffi.Enum(name, def);
 }
 
 function Struct(name, def){
- return exports.Structs[name] = new ffi.Struct(name, def);
+ return exports.Structs[name.replace(/^cef_?/i,'')] = new ffi.Struct(name, def);
 }
 
 function Method(name, ret, params){
- return exports.Methods[name] = new ffi.ForeignFunction(name, 'libcef', ret, params);
+ return exports.Methods[name.replace(/^cef_?/i,'')] = new ffi.ForeignFunction(name, lib, ret, params);
 }
 
 
@@ -30,11 +32,6 @@ var
  CEF_STRING_LIST = TypeDef('CEF_STRING_LIST', 'pointer');
 
 
-
-var COORD = Struct('COORD', {
- X: SHORT,
- Y: SHORT
-});
 
 var RECT = Struct('RECT', {
  Left: LONG,
